@@ -1,14 +1,11 @@
-import DummyClass from "../src/use-agent"
+import { useAgent } from '../src/use-agent'
 
-/**
- * Dummy test
- */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy()
+describe('useAgent', () => {
+  it('useAgent is a Function', () => {
+    expect(useAgent).toBeInstanceOf(Function)
   })
-
-  it("DummyClass is instantiable", () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
+  it('useAgent returns the mean to process or subscribe actions', () => {
+    const result = useAgent(() => {})
+    result
   })
 })
