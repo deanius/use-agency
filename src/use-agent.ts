@@ -14,13 +14,22 @@ export interface ActionsIn {
   subscribe(item$: Observable<any>, config?: SubscriberConfig): Subscription
 }
 
+export interface HookApi {
+  on(filter: ActionFilter, handler: Subscriber, config: SubscriberConfig): void
+  filter(filter: ActionFilter, handler: Subscriber, config: SubscriberConfig): void,
+  actionsOfType: (matcher: ActionFilter) => Observable<Action>,
+  agentEvents?: Observable<any>
+}
+
+export type SpecifiesConsequences = (api: HookApi) => void
+
 // Must be called within a hook!
-export function useAgent(runFn: Function): ActionsIn {
+export function useAgent(runFn: SpecifiesConsequences): ActionsIn {
   const [agent] = useState(() => new Agent())
 
   const handles: Array<{ handler: Subscription; filter: ActionFilter; type: string }> = []
   const events = new Subject()
-  const agentApi = {
+  const agentApi : HookApi = {
     on(filter: ActionFilter, handler: Subscriber, config: SubscriberConfig) {
       events.next({ type: 'agent/on', pattern: filter })
       handles.push({ handler: agent.on(filter, handler, config), filter, type: 'on' })
